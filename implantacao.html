@@ -117,11 +117,8 @@ td:nth-child(3){text-align:left;font-size:12px;color:var(--text2);font-family:va
 
 /* ── Tipo badge ── */
 .badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;white-space:nowrap;font-family:var(--mono)}
-.b-prefeitura{background:var(--accent-bg);color:var(--accent-text)}
-.b-estadual{background:var(--blue-bg);color:var(--blue-text)}
-.b-federal{background:var(--amber-bg);color:var(--amber-text)}
-.b-privado{background:var(--purple-bg);color:var(--purple-text)}
-.b-outros{background:var(--gray-bg);color:var(--gray-text)}
+.b-implantacao{background:var(--accent-bg);color:var(--accent-text)}
+.b-atualizacao{background:var(--blue-bg);color:var(--blue-text)}
 
 /* ── Final date ── */
 .fin-val{font-size:12px;font-family:var(--mono);color:var(--accent);font-weight:500}
@@ -190,11 +187,8 @@ td:nth-child(3){text-align:left;font-size:12px;color:var(--text2);font-family:va
 <div class="add-bar">
   <input type="text" id="nomeCliente" placeholder="Nome do cliente"/>
   <select id="tipoCliente">
-    <option value="prefeitura">Prefeitura</option>
-    <option value="estadual">Estadual</option>
-    <option value="federal">Federal</option>
-    <option value="privado">Privado</option>
-    <option value="outros">Outros</option>
+    <option value="implantacao">Implantação</option>
+    <option value="atualizacao">Atualização</option>
   </select>
   <input type="date" id="dataCliente"/>
   <button class="btn-add" onclick="addCliente()">+ Adicionar cliente</button>
@@ -289,7 +283,7 @@ document.getElementById('modal').addEventListener('click',function(e){if(e.targe
 function fmt(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
 function checkSVG(){return`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
 function badgeClass(t){return`b-${t||'outros'}`;}
-function badgeLabel(t){return{prefeitura:'Prefeitura',estadual:'Estadual',federal:'Federal',privado:'Privado',outros:'Outros'}[t]||'Outros';}
+function badgeLabel(t){return{implantacao:'Implantação',atualizacao:'Atualização';}
 function progress(c){return COLS.filter(k=>c[k]).length;}
 
 /* ── Toggle ── */
@@ -404,7 +398,7 @@ function render(){
 /* ── Init ── */
 load();
 if(clientes.length===0){
-  [{nome:'Prefeitura de Sobral',tipo:'prefeitura',data:'2026-03-20'},{nome:'SEFAZ Estadual',tipo:'estadual',data:'2026-04-05'}].forEach(e=>{
+  [{nome:'Implantação de Sobral',tipo:'implantacao',data:'2026-03-20'},{nome:'SEFAZ Atualização',tipo:'atualizacao',data:'2026-04-05'}].forEach(e=>{
     const o={nome:e.nome,tipo:e.tipo,data:e.data,data_fin:''};
     COLS.forEach(k=>{o[k]=false;o[k+'_dt']='';});
     o.checklist=true;o.checklist_dt='2026-03-21';o.banco=true;o.banco_dt='2026-03-22';
