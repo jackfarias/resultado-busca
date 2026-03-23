@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="auto">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Controle de Implantação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface2: #f0efe9;
+  --border: #dddbd3;
+  --border2: #c8c6bc;
+  --text: #1a1917;
+  --text2: #6b6960;
+  --text3: #9e9c94;
+  --accent: #1a7a52;
+  --accent-bg: #e6f4ed;
+  --accent-text: #0f5c3b;
+  --blue-bg: #e8f0fb;
+  --blue-text: #1a4fa0;
+  --amber-bg: #fdf3dc;
+  --amber-text: #8a5f0a;
+  --purple-bg: #f0edff;
+  --purple-text: #4a35a8;
+  --gray-bg: #eeede8;
+  --gray-text: #555450;
+  --red: #d44;
+  --done: #1a7a52;
+  --done-bg: #1a7a52;
+  --radius: 8px;
+  --radius-sm: 5px;
+  --font: 'IBM Plex Sans', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111110;
+    --surface: #1c1c1a;
+    --surface2: #252523;
+    --border: #2e2e2b;
+    --border2: #3a3a37;
+    --text: #f0ede6;
+    --text2: #9e9c94;
+    --text3: #5e5d57;
+    --accent: #2ea86e;
+    --accent-bg: #0d2b1e;
+    --accent-text: #4dcf90;
+    --blue-bg: #0d1f3c;
+    --blue-text: #6ea8f7;
+    --amber-bg: #2a1e07;
+    --amber-text: #f0b94a;
+    --purple-bg: #1a1430;
+    --purple-text: #a98ef7;
+    --gray-bg: #242422;
+    --gray-text: #9e9c94;
+    --red: #f07070;
+    --done: #2ea86e;
+    --done-bg: #2ea86e;
+  }
+}
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"]  {
+  color-scheme: dark;
+  --bg:#111110;--surface:#1c1c1a;--surface2:#252523;--border:#2e2e2b;--border2:#3a3a37;
+  --text:#f0ede6;--text2:#9e9c94;--text3:#5e5d57;--accent:#2ea86e;--accent-bg:#0d2b1e;
+  --accent-text:#4dcf90;--blue-bg:#0d1f3c;--blue-text:#6ea8f7;--amber-bg:#2a1e07;
+  --amber-text:#f0b94a;--purple-bg:#1a1430;--purple-text:#a98ef7;--gray-bg:#242422;
+  --gray-text:#9e9c94;--red:#f07070;--done:#2ea86e;--done-bg:#2ea86e;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;min-height:100vh;transition:background .2s,color .2s}
+
+/* ── Header ── */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:10px}
+.logo{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);letter-spacing:-.3px}
+.logo span{color:var(--accent)}
+.header-right{display:flex;align-items:center;gap:8px}
+.pill-stat{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;font-family:var(--mono);color:var(--text2)}
+.btn-theme{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;font-size:12px;cursor:pointer;color:var(--text2);font-family:var(--font);transition:all .15s}
+.btn-theme:hover{border-color:var(--border2);color:var(--text)}
+
+/* ── Add form ── */
+.add-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.add-bar input,.add-bar select{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;transition:border .15s}
+.add-bar input:focus,.add-bar select:focus{border-color:var(--accent)}
+.add-bar input[type=text]{flex:1;min-width:140px;max-width:220px}
+.add-bar input[type=date]{width:140px}
+.add-bar select{width:140px}
+.btn-add{background:var(--accent);border:none;border-radius:var(--radius-sm);padding:7px 16px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;white-space:nowrap;font-family:var(--font);transition:opacity .15s}
+.btn-add:hover{opacity:.88}
+
+/* ── Desktop table ── */
+.table-wrap{overflow-x:auto;padding:16px}
+table{width:100%;border-collapse:collapse;min-width:960px}
+thead th{font-size:11px;font-weight:500;color:var(--text3);text-align:center;padding:8px 6px;border-bottom:1px solid var(--border);white-space:nowrap;font-family:var(--mono);letter-spacing:.3px;text-transform:uppercase}
+thead th:first-child,thead th:nth-child(2),thead th:nth-child(3){text-align:left}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--surface2)}
+td{padding:8px 6px;vertical-align:middle;text-align:center}
+td:first-child{text-align:left;font-weight:500;font-size:13px;white-space:nowrap}
+td:nth-child(2){text-align:left}
+td:nth-child(3){text-align:left;font-size:12px;color:var(--text2);font-family:var(--mono)}
+.step-cell{display:flex;flex-direction:column;align-items:center;gap:3px}
+.step-dt{font-size:10px;font-family:var(--mono);color:var(--text3);white-space:nowrap}
+
+/* ── Check button ── */
+.check{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;background:transparent}
+.check:hover{border-color:var(--accent)}
+.check.done{background:var(--done-bg);border-color:var(--done-bg)}
+.check svg{display:none}
+.check.done svg{display:block}
+
+/* ── Tipo badge ── */
+.badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;white-space:nowrap;font-family:var(--mono)}
+.b-prefeitura{background:var(--accent-bg);color:var(--accent-text)}
+.b-estadual{background:var(--blue-bg);color:var(--blue-text)}
+.b-federal{background:var(--amber-bg);color:var(--amber-text)}
+.b-privado{background:var(--purple-bg);color:var(--purple-text)}
+.b-outros{background:var(--gray-bg);color:var(--gray-text)}
+
+/* ── Final date ── */
+.fin-val{font-size:12px;font-family:var(--mono);color:var(--accent);font-weight:500}
+.fin-empty{font-size:11px;color:var(--text3)}
+.btn-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px;transition:color .15s}
+.btn-del:hover{color:var(--red)}
+
+/* ── Mobile cards ── */
+.cards{display:none;padding:12px;gap:10px;flex-direction:column}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card-head{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--border)}
+.card-name{font-weight:600;font-size:14px}
+.card-meta{font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:2px}
+.card-head-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.card-progress{font-size:11px;font-family:var(--mono);color:var(--text2)}
+.card-body{padding:10px 14px;display:flex;flex-direction:column;gap:0}
+.card-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+.card-row:last-child{border-bottom:none}
+.card-row-label{font-size:12px;color:var(--text2)}
+.card-row-right{display:flex;align-items:center;gap:8px}
+.card-row-dt{font-size:10px;font-family:var(--mono);color:var(--text3)}
+.card-fin{padding:10px 14px;background:var(--surface2);display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.card-fin-label{color:var(--text2)}
+
+/* ── Empty state ── */
+.empty{text-align:center;padding:40px 16px;color:var(--text3);font-size:13px}
+.empty strong{display:block;font-size:15px;color:var(--text2);margin-bottom:6px}
+
+/* ── Responsive breakpoint ── */
+@media(max-width:700px){
+  .table-wrap{display:none}
+  .cards{display:flex}
+  .add-bar input[type=text]{max-width:none;width:100%}
+  .add-bar{gap:8px}
+  .add-bar input,.add-bar select{width:calc(50% - 4px)}
+  .add-bar input[type=text]{width:100%}
+  .btn-add{width:100%}
+  header{padding:10px 12px}
+}
+
+/* ── Date modal ── */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;width:100%;max-width:300px}
+.modal h3{font-size:14px;font-weight:500;margin-bottom:12px}
+.modal input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;margin-bottom:12px}
+.modal input:focus{border-color:var(--accent)}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+.modal-btns button{padding:7px 14px;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:var(--font);border:1px solid var(--border)}
+.btn-cancel{background:var(--surface2);color:var(--text)}
+.btn-ok{background:var(--accent);color:#fff;border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo">impl<span>.</span>track</div>
+  </div>
+  <div class="header-right">
+    <span class="pill-stat" id="statPill">0 clientes</span>
+    <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">☀ Claro</button>
+  </div>
+</header>
+
+<div class="add-bar">
+  <input type="text" id="nomeCliente" placeholder="Nome do cliente"/>
+  <select id="tipoCliente">
+    <option value="prefeitura">Prefeitura</option>
+    <option value="estadual">Estadual</option>
+    <option value="federal">Federal</option>
+    <option value="privado">Privado</option>
+    <option value="outros">Outros</option>
+  </select>
+  <input type="date" id="dataCliente"/>
+  <button class="btn-add" onclick="addCliente()">+ Adicionar cliente</button>
+</div>
+
+<!-- Desktop -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Tipo</th>
+        <th>Início</th>
+        <th>Checklist</th>
+        <th>Banco</th>
+        <th>AWS</th>
+        <th>Web</th>
+        <th>APK</th>
+        <th>Agentes</th>
+        <th>Check-IP</th>
+        <th>Finalizado</th>
+        <th>Data fin.</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div id="emptyDesk" class="empty" style="display:none"><strong>Nenhum cliente cadastrado</strong>Adicione um cliente acima para começar.</div>
+</div>
+
+<!-- Mobile -->
+<div class="cards" id="cards">
+  <div id="emptyMob" class="empty"><strong>Nenhum cliente cadastrado</strong>Adicione um cliente acima para começar.</div>
+</div>
+
+<!-- Modal data -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle">Data de conclusão</h3>
+    <input type="date" id="modalDate"/>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-ok" onclick="confirmModal()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLS=['checklist','banco','aws','web','apk','agentes','checkip','finalizado'];
+const LABELS={checklist:'Checklist',banco:'Banco de dados',aws:'Servidor AWS',web:'Ambiente WEB',apk:'APK',agentes:'Cadastro agentes',checkip:'Check-IP final',finalizado:'Finalizado'};
+let clientes=[];
+let modalCb=null;
+
+/* ── Theme ── */
+const root=document.documentElement;
+const themeBtn=document.getElementById('themeBtn');
+let theme=localStorage.getItem('theme')||'auto';
+function applyTheme(){
+  root.setAttribute('data-theme',theme);
+  if(theme==='dark'){themeBtn.textContent='☀ Claro'}
+  else if(theme==='light'){themeBtn.textContent='☾ Escuro'}
+  else{themeBtn.textContent='● Auto'}
+}
+function toggleTheme(){
+  const order=['auto','dark','light'];
+  theme=order[(order.indexOf(theme)+1)%3];
+  localStorage.setItem('theme',theme);
+  applyTheme();
+}
+applyTheme();
+
+/* ── Storage ── */
+function save(){try{localStorage.setItem('impl_v3',JSON.stringify(clientes))}catch(e){}}
+function load(){try{const d=localStorage.getItem('impl_v3');if(d)clientes=JSON.parse(d)}catch(e){}}
+
+/* ── Modal ── */
+function openModal(title,cb,current){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalDate').value=current||'';
+  document.getElementById('modal').classList.add('open');
+  modalCb=cb;
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');modalCb=null;}
+function confirmModal(){
+  const v=document.getElementById('modalDate').value;
+  if(modalCb)modalCb(v);
+  closeModal();
+}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+/* ── Helpers ── */
+function fmt(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+function checkSVG(){return`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
+function badgeClass(t){return`b-${t||'outros'}`;}
+function badgeLabel(t){return{prefeitura:'Prefeitura',estadual:'Estadual',federal:'Federal',privado:'Privado',outros:'Outros'}[t]||'Outros';}
+function progress(c){return COLS.filter(k=>c[k]).length;}
+
+/* ── Toggle ── */
+function toggle(i,k){
+  if(clientes[i][k]){clientes[i][k]=false;clientes[i][k+'_dt']='';}
+  else{
+    openModal(`Concluído: ${LABELS[k]}`,function(dt){
+      clientes[i][k]=true;
+      clientes[i][k+'_dt']=dt||'';
+      save();render();
+    },clientes[i][k+'_dt']);
+    return;
+  }
+  save();render();
+}
+function editDt(i,k){
+  openModal(`Data: ${LABELS[k]}`,function(dt){
+    clientes[i][k+'_dt']=dt||'';
+    save();render();
+  },clientes[i][k+'_dt']);
+}
+function editFin(i){
+  openModal('Data de finalização',function(dt){
+    clientes[i].data_fin=dt||'';
+    save();render();
+  },clientes[i].data_fin);
+}
+function remove(i){if(confirm('Remover este cliente?')){clientes.splice(i,1);save();render();}}
+
+/* ── Add ── */
+function addCliente(){
+  const nome=document.getElementById('nomeCliente').value.trim();
+  if(!nome)return;
+  const tipo=document.getElementById('tipoCliente').value;
+  const data=document.getElementById('dataCliente').value;
+  const obj={nome,tipo,data,data_fin:''};
+  COLS.forEach(k=>{obj[k]=false;obj[k+'_dt']='';});
+  clientes.push(obj);
+  document.getElementById('nomeCliente').value='';
+  document.getElementById('dataCliente').value='';
+  save();render();
+}
+
+/* ── Render ── */
+function render(){
+  const total=clientes.length;
+  const done=clientes.filter(c=>c.finalizado).length;
+  document.getElementById('statPill').textContent=`${total} cliente${total!==1?'s':''} · ${done} finalizado${done!==1?'s':''}`;
+
+  /* desktop */
+  const tb=document.getElementById('tbody');
+  const emD=document.getElementById('emptyDesk');
+  tb.innerHTML='';
+  emD.style.display=total===0?'block':'none';
+  clientes.forEach((c,i)=>{
+    const tr=document.createElement('tr');
+    const steps=COLS.map(k=>`
+      <td>
+        <div class="step-cell">
+          <div class="check${c[k]?' done':''}" onclick="toggle(${i},'${k}')" title="Clique para marcar">${checkSVG()}</div>
+          ${c[k+'_dt']?`<span class="step-dt" onclick="editDt(${i},'${k}')" style="cursor:pointer" title="Editar data">${fmt(c[k+'_dt'])}</span>`:''}
+        </div>
+      </td>`).join('');
+    tr.innerHTML=`
+      <td>${c.nome}</td>
+      <td><span class="badge ${badgeClass(c.tipo)}">${badgeLabel(c.tipo)}</span></td>
+      <td>${fmt(c.data)}</td>
+      ${steps}
+      <td>${c.data_fin?`<span class="fin-val" onclick="editFin(${i})" style="cursor:pointer">${fmt(c.data_fin)}</span>`:`<span class="fin-empty" onclick="editFin(${i})" style="cursor:pointer">Definir</span>`}</td>
+      <td><button class="btn-del" onclick="remove(${i})">✕</button></td>`;
+    tb.appendChild(tr);
+  });
+
+  /* mobile */
+  const cards=document.getElementById('cards');
+  const emM=document.getElementById('emptyMob');
+  const existing=[...cards.querySelectorAll('.card')];
+  existing.forEach(e=>e.remove());
+  emM.style.display=total===0?'block':'none';
+  clientes.forEach((c,i)=>{
+    const p=progress(c);
+    const card=document.createElement('div');
+    card.className='card';
+    const rows=COLS.map(k=>`
+      <div class="card-row">
+        <span class="card-row-label">${LABELS[k]}</span>
+        <div class="card-row-right">
+          ${c[k+'_dt']?`<span class="card-row-dt" onclick="editDt(${i},'${k}')" style="cursor:pointer">${fmt(c[k+'_dt'])}</span>`:''}
+          <div class="check${c[k]?' done':''}" onclick="toggle(${i},'${k}')">${checkSVG()}</div>
+        </div>
+      </div>`).join('');
+    card.innerHTML=`
+      <div class="card-head">
+        <div>
+          <div class="card-name">${c.nome}</div>
+          <div class="card-meta"><span class="badge ${badgeClass(c.tipo)}">${badgeLabel(c.tipo)}</span> &nbsp;${fmt(c.data)}</div>
+        </div>
+        <div class="card-head-right">
+          <span class="card-progress">${p}/${COLS.length}</span>
+          <button class="btn-del" onclick="remove(${i})">✕</button>
+        </div>
+      </div>
+      <div class="card-body">${rows}</div>
+      <div class="card-fin">
+        <span class="card-fin-label">Data de finalização</span>
+        ${c.data_fin?`<span class="fin-val" onclick="editFin(${i})" style="cursor:pointer">${fmt(c.data_fin)}</span>`:`<span class="fin-empty" onclick="editFin(${i})" style="cursor:pointer">Definir data</span>`}
+      </div>`;
+    cards.appendChild(card);
+  });
+}
+
+/* ── Init ── */
+load();
+if(clientes.length===0){
+  [{nome:'Prefeitura de Sobral',tipo:'prefeitura',data:'2026-03-20'},{nome:'SEFAZ Estadual',tipo:'estadual',data:'2026-04-05'}].forEach(e=>{
+    const o={nome:e.nome,tipo:e.tipo,data:e.data,data_fin:''};
+    COLS.forEach(k=>{o[k]=false;o[k+'_dt']='';});
+    o.checklist=true;o.checklist_dt='2026-03-21';o.banco=true;o.banco_dt='2026-03-22';
+    clientes.push(o);
+  });
+}
+render();
+</script>
+</body>
+</html>
