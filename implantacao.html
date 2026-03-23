@@ -283,7 +283,7 @@ document.getElementById('modal').addEventListener('click',function(e){if(e.targe
 function fmt(iso){if(!iso)return'—';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
 function checkSVG(){return`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
 function badgeClass(t){return`b-${t||'outros'}`;}
-function badgeLabel(t){return{implantacao:'Implantação',atualizacao:'Atualização';}
+function badgeLabel(t){return{implantacao:'Implantação',atualizacao:'Atualização'}[t]||'Outros';}
 function progress(c){return COLS.filter(k=>c[k]).length;}
 
 /* ── Toggle ── */
